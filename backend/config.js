@@ -1,8 +1,16 @@
 export const PORT = process.env.PORT || 5555;
 
-
-// const mongoDBURL = "mongodb+srv://gautamatuag540_db_user:a7KRA6gmYowCiD2z@cluster0.cnlk4ps.mongodb.net/?book-store-db=Cluster0"
-
 // Use environment variable for MongoDB URI in production
 // For local development, fallback to local MongoDB
-export const mongoDBURL = process.env.MONGODB_URI || 'mongodb://localhost:27017/books-collection';
+const mongoDBURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/books-collection';
+
+// Validate MongoDB URI format
+if (!mongoDBURI || (!mongoDBURI.startsWith('mongodb://') && !mongoDBURI.startsWith('mongodb+srv://'))) {
+  console.error('❌ Invalid MongoDB URI. Must start with "mongodb://" or "mongodb+srv://"');
+  console.error('Current MONGODB_URI value:', mongoDBURI ? `"${mongoDBURI.substring(0, 20)}..."` : 'undefined or empty');
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('MONGODB_URI environment variable is required and must be a valid MongoDB connection string');
+  }
+}
+
+export const mongoDBURL = mongoDBURI.trim();

@@ -36,8 +36,18 @@ app.use(
 );
 
 app.get('/', (request, response) => {
-  console.log(request);
-  return response.status(234).send('Welcome To MERN Stack Tutorial');
+  return response.status(200).json({
+    message: 'Welcome To Book Store API',
+    status: 'success',
+    endpoints: {
+      books: '/books',
+      getAllBooks: 'GET /books',
+      getBook: 'GET /books/:id',
+      createBook: 'POST /books',
+      updateBook: 'PUT /books/:id',
+      deleteBook: 'DELETE /books/:id'
+    }
+  });
 });
 
 app.use('/books', booksRoute);
@@ -45,11 +55,17 @@ app.use('/books', booksRoute);
 mongoose
   .connect(mongoDBURL)
   .then(() => {
-    console.log('App connected to database');
+    console.log('✅ App connected to database successfully');
     app.listen(PORT, () => {
-      console.log(`App is listening to port: ${PORT}`);
+      console.log(`🚀 App is listening to port: ${PORT}`);
     });
   })
   .catch((error) => {
-    console.log(error);
+    console.error('❌ Database connection error:');
+    console.error('Error details:', error.message);
+    if (error.message.includes('Invalid scheme')) {
+      console.error('⚠️  MONGODB_URI appears to be invalid or empty');
+      console.error('Please check your environment variables in Render dashboard');
+    }
+    process.exit(1); // Exit process on connection failure
   });
