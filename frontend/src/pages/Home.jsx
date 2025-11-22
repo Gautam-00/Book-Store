@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Spinner from '../components/Spinner';
 import { Link } from 'react-router-dom';
+import { API_URL } from '../config/api';
 
 import { MdOutlineAddBox } from 'react-icons/md';
 import BooksTable from '../components/home/BooksTable';
@@ -15,7 +16,7 @@ const Home = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get('http://localhost:5555/books')
+      .get(`${API_URL}/books`)
       .then((response) => {
         setBooks(response.data.data);
         setLoading(false);
